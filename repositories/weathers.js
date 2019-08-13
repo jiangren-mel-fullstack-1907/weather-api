@@ -59,6 +59,8 @@ class WeatherRepository {
     deleteById(id, callback) {
         return new Promise((resolve, reject) => {
             this.collection.findOneAndDelete({_id: ObjectId(id)}, function(err, result) {
+                console.log('err ===>>>', err);
+                console.log('result ===>>>', result);
                 if (err) reject(err);
                 else resolve(result.value);
             })
