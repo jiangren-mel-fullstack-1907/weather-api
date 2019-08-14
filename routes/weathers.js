@@ -13,7 +13,7 @@ router.get('/', async function (req, res, next) {
 
 router.post('/', async function (req, res, next) {
   try {
-    let existingWeathers = await weatherRepository.getAll({ name: req.body.name });
+    let existingWeathers = await weatherRepository.getAll({ cityName: req.body.cityName });
     if (existingWeathers.length > 0) {
       res.status(400).json('weather existed');
     } else {

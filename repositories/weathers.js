@@ -1,72 +1,37 @@
 var MongoClient = require('mongodb').MongoClient
 var ObjectId = require('mongodb').ObjectID;
 
+const WeatherSchema = require('../models/weather');
+
 class WeatherRepository {
-    constructor() {
-        MongoClient.connect('mongodb://192.168.99.100:27017/weather-api', (err, db) => {
-            this.collection = db.collection('city-weathers');
-        })
-        // MongoClient.connect('mongodb://user01:user01@ds151463.mlab.com:51463/pigeon', (err, db) => {
-        //     this.collection = db.collection('cheng-city-weathers');
-        // })
+    constructor(WeatherModel) {
+        this.WeatherModel = WeatherModel;
     }
 
     getAll(query) {
-        return new Promise((resolve, reject) => {
-            this.collection.find(query).toArray(function (err, result) {
-                if (err) reject(err);
-                else resolve(result);
-            });
-        })
+        return this.WeatherModel.find(query);
     }
 
     getById(id) {
-        return new Promise((resolve, reject) => {
-            this.collection.findOne({_id: ObjectId(id)}, function(err, result) {
-                if (err) reject(err);
-                else resolve(result);
-            })
-        })
+        return this.WeatherModel.findOne({_id: ObjectId(id)});
     }
 
     create(body) {
-        return new Promise((resolve, reject) => {
-            this.collection.insertOne(body, function(err, result) {
-                if (err) reject(err);
-                else resolve(result.ops[0]);
-            })
-        })
+        return this.WeatherModel.create(body);
     }
 
     put(id, body) {
-        return new Promise((resolve, reject) => {
-            this.collection.findOneAndReplace({_id: ObjectId(id)}, {$set: body}, {returnNewDocument: true}, function(err, result) {
-                if (err) reject(err);
-                else resolve(result.value);
-            });
-        })
+        return this.WeatherModel.findOneAndReplace({_id: ObjectId(id)}, body, {new: true});
     }
 
     patch(id, body) {
-        return new Promise((resolve, reject) => {
-            this.collection.findOneAndUpdate({_id: ObjectId(id)}, {$set: body,}, {returnNewDocument: true}, function(err, result) {
-                if (err) reject(err);
-                else resolve(result.value);
-            });
-        })
+        return this.WeatherModel.findOneAndUpdate({_id: ObjectId(id)}, body, {new: true});
     }
 
     deleteById(id, callback) {
-        return new Promise((resolve, reject) => {
-            this.collection.findOneAndDelete({_id: ObjectId(id)}, function(err, result) {
-                console.log('err ===>>>', err);
-                console.log('result ===>>>', result);
-                if (err) reject(err);
-                else resolve(result.value);
-            })
-        })
+        return this.WeatherModel.findOneAndDelete({_id: ObjectId(id)});
     }
 }
 
-let weatherRepository = new WeatherRepository();
+let weatherRepository = new WeatherRepository(WeatherSchema);
 module.exports = weatherRepository;

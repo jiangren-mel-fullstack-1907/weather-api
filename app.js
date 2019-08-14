@@ -5,8 +5,10 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
-var weathersRouter = require('./routes/weathers');
+var mongoose = require('mongoose');
 
+// mongoose.connect('mongodb://192.168.99.100:27017/weather-api', {useNewUrlParser: true});
+mongoose.connect('mongodb://user01:user01@ds151463.mlab.com:51463/pigeon', {useNewUrlParser: true});
 var app = express();
 
 // view engine setup
@@ -20,7 +22,6 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-app.use('/weathers', weathersRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
