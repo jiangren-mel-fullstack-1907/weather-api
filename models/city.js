@@ -1,24 +1,21 @@
 const mongoose = require('mongoose');
 
-const weatherSchema = new mongoose.Schema(
+const citySchema = new mongoose.Schema(
     {
-        description: {
+        name: {
             type: String,
             required: true,
             trim: true,
             minlength: 2
         },
-        temperature: {
+        post: {
             type: String,
             required: true,
             trim: true,
             minlength: 2
         },
-        icon: {
-            type: String
-        },
-        city: { type: String, ref: 'City' },
+        weathers: [{ type: String, ref: 'Weather' }],
     }
 );
 
-module.exports = mongoose.model('Weather', weatherSchema);
+module.exports = mongoose.model('City', citySchema);
