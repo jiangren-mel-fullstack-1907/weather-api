@@ -1,14 +1,20 @@
 const express = require('express');
-const authGuard = require('../middlewares/authGuard');
 const validateAuth = require('../middlewares/validateAuth');
 const userRepository = require('../repositories/user');
 const { generateToken } = require('../utils/jwt');
 
 const router = express.Router();
 
-// router.get('/me', authGuard, getSelf);
+router.post('/login', validateAuth, async function (req, res) {
+    const { email, password } = req.body;
+    const user = await userRepository.validateUser(email, password);
+    if (!user) {
+        return res.status(401).send('Invalid email or password.')
+    }
 
-// router.post('/login', validateAuth, login);
+    const token = generateToken(user._id);
+    return res.json({ name: user.name, token });
+});
 
 
 router.post('/', validateAuth, async function addUser(req, res) {
@@ -19,8 +25,7 @@ router.post('/', validateAuth, async function addUser(req, res) {
             res.status(400).send('Email already exists');
         }
         const user = await userRepository.create({ name, password, email });
-        const token = generateToken(user._id);
-        res.status(201).json({ email, name, token });
+        res.status.json(user);
     } catch (error) {
         res.status(500).send(error.message)
     }
