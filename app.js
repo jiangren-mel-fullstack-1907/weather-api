@@ -4,6 +4,8 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
+require('envdotjson').load();
+
 var indexRouter = require('./routes/index');
 var mongoose = require('mongoose');
 

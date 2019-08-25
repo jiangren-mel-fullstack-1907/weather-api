@@ -14,7 +14,7 @@ router.get('/', async function (req, res, next) {
 
 router.post('/', async function (req, res, next) {
   try {
-    let existingCities = await cityRepository.getAll({ cityName: req.body.cityName });
+    let existingCities = await cityRepository.getAll({ name: req.body.name });
     if (existingCities.length > 0) {
       res.status(400).json('city existed');
     } else {
@@ -72,7 +72,7 @@ router.get('/:id', async function (req, res, next) {
 // get weathers
 router.get('/:id/weathers', async function (req, res, next) {
   try {
-    let aCity = await cityRepository.getById(req.params.id);
+    let aCity = await cityRepository.getWeathersByCityId(req.params.id);
     console.log('result ===>>> ', aCity);
     if (!aCity) {
       res.sendStatus(404);
