@@ -6,7 +6,7 @@ var usersRouter = require('./user');
 const authGuard = require('../middlewares/authGuard');
 
 router.use('/weathers', weathersRouter);
-router.use('/cities', authGuard, citiesRouter);
+router.use('/cities', citiesRouter);
 router.use('/users', usersRouter);
 
 module.exports = router;

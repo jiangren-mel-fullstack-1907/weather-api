@@ -1,0 +1,743 @@
+openapi: 3.0.0
+info:
+  title: Weather api
+  version: 0.0.1
+paths:
+  /cities/count:
+    get:
+      x-controller-name: CityController
+      x-operation-name: count
+      tags:
+        - CityController
+      responses:
+        '200':
+          description: City model count
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: number
+      parameters:
+        - name: where
+          in: query
+          style: deepObject
+          explode: true
+          schema:
+            type: object
+      operationId: CityController.count
+  '/cities/{id}/weathers':
+    post:
+      x-controller-name: CityController
+      x-operation-name: createWeather
+      tags:
+        - CityController
+      responses:
+        '200':
+          description: City.Weather model instance
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Weather'
+      parameters:
+        - name: id
+          in: path
+          schema:
+            type: string
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WeatherExcludingId'
+        x-parameter-index: 1
+      operationId: CityController.createWeather
+    patch:
+      x-controller-name: CityController
+      x-operation-name: patchWeather
+      tags:
+        - CityController
+      responses:
+        '200':
+          description: City.Weather PATCH success count
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: number
+      parameters:
+        - name: id
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: where
+          in: query
+          style: deepObject
+          explode: true
+          schema:
+            type: object
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WeatherPartial'
+        x-parameter-index: 1
+      operationId: CityController.patchWeather
+    get:
+      x-controller-name: CityController
+      x-operation-name: findWeather
+      tags:
+        - CityController
+      responses:
+        '200':
+          description: Array of Weather's belonging to City
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Weather'
+      parameters:
+        - name: id
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: filter
+          in: query
+          style: deepObject
+          explode: true
+          schema:
+            type: object
+            additionalProperties: true
+      operationId: CityController.findWeather
+    delete:
+      x-controller-name: CityController
+      x-operation-name: deleteWeather
+      tags:
+        - CityController
+      responses:
+        '200':
+          description: City.Weather DELETE success count
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: number
+      parameters:
+        - name: id
+          in: path
+          schema:
+            type: string
+          required: true
+        - name: where
+          in: query
+          style: deepObject
+          explode: true
+          schema:
+            type: object
+      operationId: CityController.deleteWeather
+  '/cities/{id}':
+    put:
+      x-controller-name: CityController
+      x-operation-name: replaceById
+      tags:
+        - CityController
+      responses:
+        '204':
+          description: City PUT success
+      parameters:
+        - name: id
+          in: path
+          schema:
+            type: string
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/City'
+        x-parameter-index: 1
+      operationId: CityController.replaceById
+    patch:
+      x-controller-name: CityController
+      x-operation-name: updateById
+      tags:
+        - CityController
+      responses:
+        '204':
+          description: City PATCH success
+      parameters:
+        - name: id
+          in: path
+          schema:
+            type: string
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CityPartial'
+        x-parameter-index: 1
+      operationId: CityController.updateById
+    get:
+      x-controller-name: CityController
+      x-operation-name: findById
+      tags:
+        - CityController
+      responses:
+        '200':
+          description: City model instance
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CityWithRelations'
+      parameters:
+        - name: id
+          in: path
+          schema:
+            type: string
+          required: true
+      operationId: CityController.findById
+    delete:
+      x-controller-name: CityController
+      x-operation-name: deleteById
+      tags:
+        - CityController
+      responses:
+        '204':
+          description: City DELETE success
+      parameters:
+        - name: id
+          in: path
+          schema:
+            type: string
+          required: true
+      operationId: CityController.deleteById
+  /cities:
+    post:
+      x-controller-name: CityController
+      x-operation-name: create
+      tags:
+        - CityController
+      responses:
+        '200':
+          description: City model instance
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/City'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CityExcludingId'
+      operationId: CityController.create
+    patch:
+      x-controller-name: CityController
+      x-operation-name: updateAll
+      tags:
+        - CityController
+      responses:
+        '200':
+          description: City PATCH success count
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: number
+      parameters:
+        - name: where
+          in: query
+          style: deepObject
+          explode: true
+          schema:
+            type: object
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CityPartial'
+      operationId: CityController.updateAll
+    get:
+      x-controller-name: CityController
+      x-operation-name: find
+      tags:
+        - CityController
+      responses:
+        '200':
+          description: Array of City model instances
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CityWithRelations'
+      parameters:
+        - name: filter
+          in: query
+          style: deepObject
+          explode: true
+          schema:
+            type: object
+            properties:
+              where:
+                type: object
+              fields:
+                type: object
+                properties:
+                  id:
+                    type: boolean
+                  name:
+                    type: boolean
+                  post:
+                    type: boolean
+                  state:
+                    type: boolean
+              offset:
+                type: integer
+                minimum: 0
+              limit:
+                type: integer
+                minimum: 0
+              skip:
+                type: integer
+                minimum: 0
+              order:
+                type: array
+                items:
+                  type: string
+              include:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    relation:
+                      type: string
+                    scope:
+                      properties:
+                        where:
+                          type: object
+                        fields:
+                          type: object
+                          properties: {}
+                        offset:
+                          type: integer
+                          minimum: 0
+                        limit:
+                          type: integer
+                          minimum: 0
+                        skip:
+                          type: integer
+                          minimum: 0
+                        order:
+                          type: array
+                          items:
+                            type: string
+      operationId: CityController.find
+  /ping:
+    get:
+      x-controller-name: PingController
+      x-operation-name: ping
+      tags:
+        - PingController
+      responses:
+        '200':
+          description: Ping Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  greeting:
+                    type: string
+                  date:
+                    type: string
+                  url:
+                    type: string
+                  headers:
+                    type: object
+                    properties:
+                      Content-Type:
+                        type: string
+                    additionalProperties: true
+      operationId: PingController.ping
+  /weathers/count:
+    get:
+      x-controller-name: WeatherController
+      x-operation-name: count
+      tags:
+        - WeatherController
+      responses:
+        '200':
+          description: Weather model count
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: number
+      parameters:
+        - name: where
+          in: query
+          style: deepObject
+          explode: true
+          schema:
+            type: object
+      operationId: WeatherController.count
+  '/weathers/{id}':
+    put:
+      x-controller-name: WeatherController
+      x-operation-name: replaceById
+      tags:
+        - WeatherController
+      responses:
+        '204':
+          description: Weather PUT success
+      parameters:
+        - name: id
+          in: path
+          schema:
+            type: string
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Weather'
+        x-parameter-index: 1
+      operationId: WeatherController.replaceById
+    patch:
+      x-controller-name: WeatherController
+      x-operation-name: updateById
+      tags:
+        - WeatherController
+      responses:
+        '204':
+          description: Weather PATCH success
+      parameters:
+        - name: id
+          in: path
+          schema:
+            type: string
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WeatherPartial'
+        x-parameter-index: 1
+      operationId: WeatherController.updateById
+    get:
+      x-controller-name: WeatherController
+      x-operation-name: findById
+      tags:
+        - WeatherController
+      responses:
+        '200':
+          description: Weather model instance
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Weather'
+      parameters:
+        - name: id
+          in: path
+          schema:
+            type: string
+          required: true
+      operationId: WeatherController.findById
+    delete:
+      x-controller-name: WeatherController
+      x-operation-name: deleteById
+      tags:
+        - WeatherController
+      responses:
+        '204':
+          description: Weather DELETE success
+      parameters:
+        - name: id
+          in: path
+          schema:
+            type: string
+          required: true
+      operationId: WeatherController.deleteById
+  /weathers:
+    post:
+      x-controller-name: WeatherController
+      x-operation-name: create
+      tags:
+        - WeatherController
+      responses:
+        '200':
+          description: Weather model instance
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Weather'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WeatherExcludingId'
+      operationId: WeatherController.create
+    patch:
+      x-controller-name: WeatherController
+      x-operation-name: updateAll
+      tags:
+        - WeatherController
+      responses:
+        '200':
+          description: Weather PATCH success count
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: number
+      parameters:
+        - name: where
+          in: query
+          style: deepObject
+          explode: true
+          schema:
+            type: object
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WeatherPartial'
+      operationId: WeatherController.updateAll
+    get:
+      x-controller-name: WeatherController
+      x-operation-name: find
+      tags:
+        - WeatherController
+      responses:
+        '200':
+          description: Array of Weather model instances
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Weather'
+      parameters:
+        - name: filter
+          in: query
+          style: deepObject
+          explode: true
+          schema:
+            type: object
+            properties:
+              where:
+                type: object
+              fields:
+                type: object
+                properties:
+                  id:
+                    type: boolean
+                  temperature:
+                    type: boolean
+                  description:
+                    type: boolean
+                  date:
+                    type: boolean
+                  icon:
+                    type: boolean
+                  cityId:
+                    type: boolean
+              offset:
+                type: integer
+                minimum: 0
+              limit:
+                type: integer
+                minimum: 0
+              skip:
+                type: integer
+                minimum: 0
+              order:
+                type: array
+                items:
+                  type: string
+              include:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    relation:
+                      type: string
+                    scope:
+                      properties:
+                        where:
+                          type: object
+                        fields:
+                          type: object
+                          properties: {}
+                        offset:
+                          type: integer
+                          minimum: 0
+                        limit:
+                          type: integer
+                          minimum: 0
+                        skip:
+                          type: integer
+                          minimum: 0
+                        order:
+                          type: array
+                          items:
+                            type: string
+      operationId: WeatherController.find
+servers:
+  - url: 'http://localhost:3000'
+components:
+  schemas:
+    City:
+      title: City
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        post:
+          type: string
+        state:
+          type: string
+      required:
+        - name
+        - post
+        - state
+    'CityExcludingId':
+      title: 'CityExcludingId'
+      not:
+        anyOf:
+          - required:
+              - id
+      properties:
+        name:
+          type: string
+        post:
+          type: string
+        state:
+          type: string
+      required:
+        - name
+        - post
+        - state
+    WeatherWithRelations:
+      title: WeatherWithRelations
+      properties:
+        id:
+          type: string
+        temperature:
+          type: string
+        description:
+          type: string
+        date:
+          type: string
+          format: date-time
+        icon:
+          type: string
+        cityId:
+          type: string
+        city:
+          $ref: '#/components/schemas/CityWithRelations'
+      required:
+        - temperature
+        - description
+    CityWithRelations:
+      title: CityWithRelations
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        post:
+          type: string
+        state:
+          type: string
+        weathers:
+          type: array
+          items:
+            $ref: '#/components/schemas/WeatherWithRelations'
+      required:
+        - name
+        - post
+        - state
+    CityPartial:
+      title: CityPartial
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        post:
+          type: string
+        state:
+          type: string
+    Weather:
+      title: Weather
+      properties:
+        id:
+          type: string
+        temperature:
+          type: string
+        description:
+          type: string
+        date:
+          type: string
+          format: date-time
+        icon:
+          type: string
+        cityId:
+          type: string
+      required:
+        - temperature
+        - description
+    'WeatherExcludingId':
+      title: 'WeatherExcludingId'
+      not:
+        anyOf:
+          - required:
+              - id
+      properties:
+        temperature:
+          type: string
+        description:
+          type: string
+        date:
+          type: string
+          format: date-time
+        icon:
+          type: string
+        cityId:
+          type: string
+      required:
+        - temperature
+        - description
+    WeatherPartial:
+      title: WeatherPartial
+      properties:
+        id:
+          type: string
+        temperature:
+          type: string
+        description:
+          type: string
+        date:
+          type: string
+          format: date-time
+        icon:
+          type: string
+        cityId:
+          type: string
