@@ -50,6 +50,10 @@ class CityRepository extends BaseRepository {
     async getWeathersByCityId(id) {
         return this.Model.findOne({ _id: ObjectId(id) }).populate('weathers');
     }
+
+    async getAllWithWeathers(query) {
+        return this.Model.find(query).populate('weathers');
+    }
 }
 
 let cityRepository = new CityRepository(CitySchema, WeatherSchema);

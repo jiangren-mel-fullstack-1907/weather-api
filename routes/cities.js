@@ -5,7 +5,7 @@ const weatherRepository = require('../repositories/weathers');
 
 router.get('/', async function (req, res, next) {
   try {
-    let result = await cityRepository.getAll(req.query);
+    let result = await cityRepository.getAllWithWeathers(req.query);
     res.json(result);
   } catch (error) {
     res.status(500).send(error.message);
