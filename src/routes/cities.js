@@ -1,114 +1,89 @@
 const express = require('express');
 const router = express.Router();
+const { asyncHandler } = require('../utils/asyncHandler');
 const cityRepository = require('../repositories/cities');
 const weatherRepository = require('../repositories/weathers');
+const { formatResponse } = require('../utils/helper');
 
-router.get('/', async function (req, res, next) {
-  try {
-    let result = await cityRepository.getAllWithWeathers(req.query);
-    res.json(result);
-  } catch (error) {
-    res.status(500).send(error.message);
-  }
-});
+router.get('/', asyncHandler(async function (req, res, next) {
+  let result = await cityRepository.getAllWithWeathers(req.query);
+  return formatResponse(res, result);
+}));
 
-router.post('/', async function (req, res, next) {
-  try {
-    let existingCities = await cityRepository.getAll({ name: req.body.name });
-    if (existingCities.length > 0) {
-      res.status(400).json('city existed');
-    } else {
-      let result = await cityRepository.create(req.body);
-      res.json(result);
-    }
-  } catch (error) {
-    res.status(500).send(error.message)
+router.post('/', asyncHandler(async function (req, res, next) {
+  let existingCities = await cityRepository.getAll({ name: req.body.name });
+  if (existingCities.length > 0) {
+    return formatResponse(res, 'city existed', 400);
   }
-});
+  let result = await cityRepository.create(req.body);
+  return formatResponse(res, result);
+}));
 
 // add a weather
-router.post('/:id/weathers', async function (req, res, next) {
-  try {
-    let aCity = await cityRepository.getById(req.params.id);
-    if (!aCity) {
-      res.sendStatus(404);
-    }
-    let newWeather = await weatherRepository.create(req.body);
-    await cityRepository.addWeather(req.params.id, newWeather.id);
-    res.json(newWeather);
-  } catch (error) {
-    res.status(500).send(error.message)
+router.post('/:id/weathers', asyncHandler(async function (req, res, next) {
+  let aCity = await cityRepository.getById(req.params.id);
+  if (!aCity) {
+    return formatResponse(res, 'Not found', 404);
   }
-});
+  let newWeather = await weatherRepository.create(req.body);
+  await cityRepository.addWeather(req.params.id, newWeather.id);
+  return formatResponse(res, newWeather);
+}));
 
 //delete a weather
-router.delete('/:id/weathers/:weatherId', async function (req, res, next) {
-  try {
-    const deletedWeather = await weatherRepository.deleteById(req.params.weatherId);
-    if (!deletedWeather) {
-      res.status(404).json('weather not found');
-    }
-    await cityRepository.removeWeather(req.params.id, req.params.weatherId);
-    res.json(deletedWeather);
-  } catch (error) {
-    res.status(500).send(error.message)
+router.delete('/:id/weathers/:weatherId', asyncHandler(async function (req, res, next) {
+  const deletedWeather = await weatherRepository.deleteById(req.params.weatherId);
+  if (!deletedWeather) {
+    return formatResponse(res, 'Not found', 404);
   }
-});
+  await cityRepository.removeWeather(req.params.id, req.params.weatherId);
+  return formatResponse(res, deletedWeather);
+}));
 
-router.get('/:id', async function (req, res, next) {
-  try {
-    let result = await cityRepository.getById(req.params.id);
-    console.log('result ===>>> ', result);
-    if (!result) {
-      res.sendStatus(404);
-    } else {
-      res.json(result);
-    }
-  } catch (error) {
-    res.status(500).send(error.message)
+router.get('/:id', asyncHandler(async function (req, res, next) {
+  let result = await cityRepository.getById(req.params.id);
+  if (!result) {
+    return formatResponse(res, 'Not found', 404);
   }
-});
+  return formatResponse(res, result);
+}));
 
 // get weathers
-router.get('/:id/weathers', async function (req, res, next) {
-  try {
-    let aCity = await cityRepository.getWeathersByCityId(req.params.id);
-    console.log('result ===>>> ', aCity);
-    if (!aCity) {
-      res.sendStatus(404);
-    } else {
-      res.json(aCity);
-    }
-  } catch (error) {
-    res.status(500).send(error.message)
+router.get('/:id/weathers', asyncHandler(async function (req, res, next) {
+  let aCity = await cityRepository.getWeathersByCityId(req.params.id);
+  if (!aCity) {
+    return formatResponse(res, 'Not found', 404);
   }
-});
 
-router.patch('/:id', async function (req, res, next) {
-  try {
-    let result = await cityRepository.patch(req.params.id, req.body);
-    res.json(result);
-  } catch (error) {
-    res.status(500).json(error.message)
-  }
-});
+  return formatResponse(res, aCity);
+}));
 
-router.put('/:id', async function (req, res, next) {
-  try {
-    let result = await cityRepository.put(req.params.id, req.body);
-    res.json(result);
-  } catch (error) {
-    res.status(500).send(error.message)
+router.patch('/:id', asyncHandler(async function (req, res, next) {
+  let aCity = await cityRepository.getWeathersByCityId(req.params.id);
+  if (!aCity) {
+    return formatResponse(res, 'Not found', 404);
   }
-});
 
-router.delete('/:id', async function (req, res, next) {
-  try {
-    let result = await cityRepository.deleteById(req.params.id);
-    res.json(result);
-  } catch (error) {
-    res.status(500).send(error.message)
+  let result = await cityRepository.patch(req.params.id, req.body);
+  return formatResponse(res, result);
+}));
+
+router.put('/:id', asyncHandler(async function (req, res, next) {
+  let aCity = await cityRepository.getWeathersByCityId(req.params.id);
+  if (!aCity) {
+    return formatResponse(res, 'Not found', 404);
   }
-});
+
+  let result = await cityRepository.put(req.params.id, req.body);
+  return formatResponse(res, result);
+}));
+
+router.delete('/:id', asyncHandler(async function (req, res, next) {
+  let aCity = await cityRepository.deleteById(req.params.id);
+  if (!aCity) {
+    return formatResponse(res, 'Not found', 404);
+  }
+  return formatResponse(res, result);
+}));
 
 module.exports = router;

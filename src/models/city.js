@@ -15,6 +15,9 @@ const citySchema = new mongoose.Schema(
             minlength: 2
         },
         weathers: [{ type: String, ref: 'Weather' }],
+    },
+    {
+        versionKey: false
     }
 );
 

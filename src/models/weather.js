@@ -17,6 +17,9 @@ const weatherSchema = new mongoose.Schema(
         icon: {
             type: String
         }
+    },
+    {
+        versionKey: false
     }
 );
 

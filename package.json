@@ -5,7 +5,9 @@
   "scripts": {
     "start": "npm run dev",
     "dev": "cross-env NODE_ENV=dev nodemon ./bin/www",
-    "prod": "cross-env NODE_ENV=prod nodemon ./bin/www"
+    "prod": "cross-env NODE_ENV=prod nodemon ./bin/www",
+    "test": "cross-env NODE_ENV=test jest",
+    "test-watch": "jest --verbose --watchAll --coverage"
   },
   "dependencies": {
     "bcrypt": "^3.0.4",
@@ -23,6 +25,12 @@
     "morgan": "~1.9.1",
     "nodemon": "^1.19.1",
     "swagger-ui-express": "^4.0.7",
+    "winston": "^3.2.1",
+    "winston-daily-rotate-file": "^4.1.0",
     "yamljs": "^0.3.0"
+  },
+  "devDependencies": {
+    "jest": "^24.9.0",
+    "supertest": "^4.0.2"
   }
 }
