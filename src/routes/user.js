@@ -2,33 +2,31 @@ const express = require('express');
 const validateAuth = require('../middlewares/validateAuth');
 const userRepository = require('../repositories/user');
 const { generateToken } = require('../utils/jwt');
+const { asyncHandler } = require('../utils/asyncHandler');
+const { formatResponse } = require('../utils/helper');
 
 const router = express.Router();
 
-router.post('/login', validateAuth, async function (req, res) {
+router.post('/login', validateAuth, asyncHandler(async function (req, res, next) {
     const { email, password } = req.body;
     const user = await userRepository.validateUser(email, password);
     if (!user) {
-        return res.status(401).send('Invalid email or password.')
+        return formatResponse(res, 'Invalid email or password.', 401);
     }
 
     const token = generateToken(user._id);
-    return res.json({ name: user.name, token });
-});
+    return formatResponse(res, { name: user.name, token });
+}));
 
 
-router.post('/', validateAuth, async function addUser(req, res) {
+router.post('/', validateAuth, asyncHandler(async function (req, res, next) {
     const { email, password, name } = req.body;
-    try {
-        const existingUser = await userRepository.getByField({ email });
-        if (existingUser) {
-            res.status(400).send('Email already exists');
-        }
-        const user = await userRepository.create({ name, password, email });
-        res.status.json(user);
-    } catch (error) {
-        res.status(500).send(error.message)
+    const existingUser = await userRepository.getByField({ email });
+    if (existingUser) {
+        return formatResponse(res, 'Email already exists', 400);
     }
-});
+    const user = await userRepository.create({ name, password, email });
+    return formatResponse(res, user, 201);
+}));
 
 module.exports = router;

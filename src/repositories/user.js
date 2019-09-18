@@ -15,6 +15,9 @@ class UserRepository extends BaseRepository {
 
     async validateUser(email, password) {
         const user = await this.Model.findOne({ email }).select('password name');
+        if (!user) {
+            return user;
+        }
         const validPassword = await user.validatePassword(password);
         return validPassword ? user : null;
     }
