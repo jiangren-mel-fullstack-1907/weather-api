@@ -10,7 +10,6 @@ function parseValidationError(error) {
 }
 
 module.exports = (err, req, res, next) => {
-  console.log('error ====>>>>', err);
   if (err.name === 'ValidationError') {
     return formatResponse(res, parseValidationError(err), 400);
   }

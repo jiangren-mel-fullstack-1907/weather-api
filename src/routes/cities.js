@@ -4,6 +4,7 @@ const { asyncHandler } = require('../utils/asyncHandler');
 const cityRepository = require('../repositories/cities');
 const weatherRepository = require('../repositories/weathers');
 const { formatResponse } = require('../utils/helper');
+const validateId = require('../middlewares/validateId');
 
 router.get('/', asyncHandler(async function (req, res, next) {
   let result = await cityRepository.getAllWithWeathers(req.query);
@@ -20,7 +21,7 @@ router.post('/', asyncHandler(async function (req, res, next) {
 }));
 
 // add a weather
-router.post('/:id/weathers', asyncHandler(async function (req, res, next) {
+router.post('/:id/weathers', validateId, asyncHandler(async function (req, res, next) {
   let aCity = await cityRepository.getById(req.params.id);
   if (!aCity) {
     return formatResponse(res, 'Not found', 404);
@@ -31,7 +32,7 @@ router.post('/:id/weathers', asyncHandler(async function (req, res, next) {
 }));
 
 //delete a weather
-router.delete('/:id/weathers/:weatherId', asyncHandler(async function (req, res, next) {
+router.delete('/:id/weathers/:weatherId', validateId, asyncHandler(async function (req, res, next) {
   const deletedWeather = await weatherRepository.deleteById(req.params.weatherId);
   if (!deletedWeather) {
     return formatResponse(res, 'Not found', 404);
@@ -40,7 +41,7 @@ router.delete('/:id/weathers/:weatherId', asyncHandler(async function (req, res,
   return formatResponse(res, deletedWeather);
 }));
 
-router.get('/:id', asyncHandler(async function (req, res, next) {
+router.get('/:id', validateId, asyncHandler(async function (req, res, next) {
   let result = await cityRepository.getById(req.params.id);
   if (!result) {
     return formatResponse(res, 'Not found', 404);
@@ -49,7 +50,7 @@ router.get('/:id', asyncHandler(async function (req, res, next) {
 }));
 
 // get weathers
-router.get('/:id/weathers', asyncHandler(async function (req, res, next) {
+router.get('/:id/weathers', validateId, asyncHandler(async function (req, res, next) {
   let aCity = await cityRepository.getWeathersByCityId(req.params.id);
   if (!aCity) {
     return formatResponse(res, 'Not found', 404);
@@ -58,7 +59,7 @@ router.get('/:id/weathers', asyncHandler(async function (req, res, next) {
   return formatResponse(res, aCity);
 }));
 
-router.patch('/:id', asyncHandler(async function (req, res, next) {
+router.patch('/:id', validateId, asyncHandler(async function (req, res, next) {
   let aCity = await cityRepository.getWeathersByCityId(req.params.id);
   if (!aCity) {
     return formatResponse(res, 'Not found', 404);
@@ -68,7 +69,7 @@ router.patch('/:id', asyncHandler(async function (req, res, next) {
   return formatResponse(res, result);
 }));
 
-router.put('/:id', asyncHandler(async function (req, res, next) {
+router.put('/:id', validateId, asyncHandler(async function (req, res, next) {
   let aCity = await cityRepository.getWeathersByCityId(req.params.id);
   if (!aCity) {
     return formatResponse(res, 'Not found', 404);
@@ -78,7 +79,7 @@ router.put('/:id', asyncHandler(async function (req, res, next) {
   return formatResponse(res, result);
 }));
 
-router.delete('/:id', asyncHandler(async function (req, res, next) {
+router.delete('/:id', validateId, asyncHandler(async function (req, res, next) {
   let aCity = await cityRepository.deleteById(req.params.id);
   if (!aCity) {
     return formatResponse(res, 'Not found', 404);

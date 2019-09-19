@@ -10,7 +10,7 @@ const YAML = require('yamljs');
 const errorHandler = require('./middlewares/errorHandler');
 const logger = require('./utils/logger');
 
-// const swaggerSpec = YAML.load('./swagger/swagger.yaml');
+const swaggerSpec = YAML.load('./swagger/swagger.yaml');
 
 
 var indexRouter = require('./routes/index');
@@ -23,7 +23,7 @@ var app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
-// app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 const morganLvl = process.env.NODE_ENV === 'production' ? 'short' : 'dev';
 const morganLog = morgan(morganLvl, { stream: logger.stream });
@@ -38,10 +38,10 @@ app.use(errorHandler);
 
 connectToDB()
   .then(() => {
-    // logger.info('DB connected');
+    logger.info('DB connected');
   })
   .catch(e => {
-    // logger.error('DB connection failed');
+    logger.error('DB connection failed');
     throw new Error(e);
   });
 

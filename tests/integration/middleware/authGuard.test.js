@@ -6,18 +6,18 @@ const { TOKEN } = require('../../data');
 describe('authGuard', () => {
   const exec = token =>
     request(server)
-      .get('/users/me')
+      .get('/cities')
       .set('Authorization', `Bearer ${token}`);
 
   it('should return 401 if no header is provided', async () => {
-    const res = await request(server).get('/users/me');
+    const res = await request(server).get('/cities');
 
     expect(res.status).toBe(401);
   });
 
   it('should return 401 if no bearer is provided', async () => {
     const res = await request(server)
-      .get('/users/me')
+      .get('/cities')
       .set('Authorization', `${TOKEN}`);
 
     expect(res.status).toBe(401);
