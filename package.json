@@ -21,19 +21,19 @@
     "express": "~4.16.1",
     "http-errors": "~1.6.3",
     "jade": "~1.11.0",
+    "jest": "^24.9.0",
     "joi": "^14.3.1",
     "jsonwebtoken": "^8.5.1",
     "mongodb": "^2.2.33",
     "mongoose": "^5.6.9",
     "morgan": "~1.9.1",
     "nodemon": "^1.19.1",
+    "supertest": "^4.0.2",
     "swagger-ui-express": "^4.0.7",
     "winston": "^3.2.1",
     "winston-daily-rotate-file": "^4.1.0",
     "yamljs": "^0.3.0"
   },
   "devDependencies": {
-    "jest": "^24.9.0",
-    "supertest": "^4.0.2"
   }
 }
