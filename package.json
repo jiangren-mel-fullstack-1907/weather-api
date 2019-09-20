@@ -3,11 +3,14 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
+    "prestart": "cross-env NODE_ENV=prod jest",
     "start": "npm run prod",
     "dev": "cross-env NODE_ENV=dev nodemon ./bin/www",
     "prod": "cross-env NODE_ENV=prod nodemon ./bin/www",
     "test": "cross-env NODE_ENV=test jest",
-    "test-watch": "jest --verbose --watchAll --coverage"
+    "test-watch": "jest --verbose --watchAll --coverage",
+    "docker:build": "docker build -t weather-api .",
+    "docker:run": "docker run -p 3000:3000 -d weather-api"
   },
   "dependencies": {
     "bcrypt": "^3.0.4",
