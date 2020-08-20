@@ -13,7 +13,7 @@
     "docker:run": "docker run -p 3000:3000 -d weather-api"
   },
   "dependencies": {
-    "bcrypt": "^3.0.4",
+    "bcrypt": "^5.0.0",
     "cookie-parser": "~1.4.4",
     "cross-env": "^5.2.0",
     "debug": "~2.6.9",
